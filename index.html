@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Rolodex of Terror</title>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <main class="is-hidden">
+    <label>
+      Use mock data? <input type="checkbox" id="mock" checked>
+    </label>
+    <div id="error-state" class="state">
+      <h1 id="error-message"></h1>
+    </div>
+    <div id="state-list" class="state">
+      <div class="button-holder">
+        <button data-href="#new" class="pure-button pure-button-primary">Add</button>
+      </div>
+      <ul id="card-list"></ul>
+    </div>
+    <div id="state-detail" class="state">
+      <a href="#">&lt; Back</a>
+      <h1>
+        <span id="detail-title"></span>
+        <span id="detail-firstName"></span>
+        <span id="detail-lastName"></span>
+      </h1>
+      <section>
+        <div class="button-holder">
+          <button data-href-template="#{id}/new-address" class="pure-button pure-button-primary">Add</button>
+        </div>
+        <h2>Addresses</h2>
+        <ul id="address-list"></ul>
+      </section>
+      <section>
+        <div class="button-holder">
+          <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
+        </div>
+        <h2>Phone Numbers</h2>
+        <ul id="phone-list"></ul>
+      </section>
+    </div>
+    <div id="state-new" class="state">
+      <form method="post" id="new-card-form" class="pure-form pure-form-stacked">
+        <fieldset>
+          <legend>New contact card</legend>
+        </fieldset>
+        <label for="title">Title</label>
+        <select name="title">
+          <option>Ms.</option>
+          <option>Mrs.</option>
+          <option>Mr.</option>
+          <option>Dr.</option>
+          <option>The Honorable</option>
+          <option>Coach</option>
+          <option>Senator</option>
+        </select>
+        <label for="firstName">First name</label>
+        <input type="text" name="firstName" class="pure-input-1">
+        <label for="lastName">Last name</label>
+        <input type="text" name="lastName" class="pure-input-1">
+        <button type="submit" class="pure-button pure-button-primary">Create</button>
+        <button type="button" data-href="#" class="pure-button">Cancel</button>
+      </form>
+    </div>
+    <div id="state-new-address" class="state">
+      <h1>
+        <span id="new-address-title"></span>
+        <span id="new-address-firstName"></span>
+        <span id="new-address-lastName"></span>
+      </h1>
+      <form method="post" id="new-address-form" class="pure-form pure-form-stacked">
+        <fieldset>
+          <legend>New address</legend>
+        </fieldset>
+        <label for="type">Type</label>
+        <select name="type">
+          <option>Home</option>
+          <option>Work</option>
+          <option>Beach</option>
+          <option>Other</option>
+        </select>
+        <label for="street">Street</label>
+        <input type="text" name="street" class="pure-input-1">
+        <label for="city">City</label>
+        <input type="text" name="city" class="pure-input-1">
+        <label for="state">State</label>
+        <input type="text" name="state" class="pure-input-1">
+        <label for="zip">ZIP</label>
+        <input type="text" name="zip" class="pure-input-1">
+        <button type="submit" class="pure-button pure-button-primary">Create</button>
+        <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
+      </form>
+    </div>
+  </main>
+
+  <template id="address-template">
+    <li>
+      <div><b id="address-type"></b></div>
+      <div id="address-street"></div>
+      <div>
+        <span id="address-city"></span>,
+        <span id="address-state"></span>
+        <span id="address-zip"></span>
+      </div>
+    </li>
+  </template>
+
+  <template id="phone-template">
+    <li><b id="phone-type"></b>: <span id="phone-number"></span></li>
+  </template>
+
+  <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

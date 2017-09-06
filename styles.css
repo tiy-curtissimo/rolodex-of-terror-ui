@@ -1,0 +1,27 @@
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+section {
+  position: relative;
+}
+
+.state {
+  width: 640px;
+  margin: auto;
+  margin-top: 16px;
+  position: relative;
+}
+
+.button-holder {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.is-hidden {
+  display: none;
+}
+
