@@ -1,26 +1,8 @@
 (function () {
 
-  const baseHref = 'http://quiet-spire-82357.herokuapp.com/cards';
-  const mock = $('#mock').prop('checked');
-  const cards = [{
-    firstName: 'Mary',
-    lastName: 'Contrary',
-    title: 'The Honorable',
-    id: 0,
-    addresses: [{
-      type: 'Home',
-      street: '123 Main St.',
-      city: 'Springfield',
-      state: 'AE',
-      zip: '00198'
-    }],
-    phoneNumbers: [
-      { type: 'Home', number: '555-1212' },
-      { type: 'Mobile', number: '123-456-7890'}
-    ]
-  }, {
-    firstName: 'Marvin', lastName: 'Gardens', title: 'Mr.', id: 1
-  }];
+  const server = 'http://quiet-spire-82357.herokuapp.com';
+  const refBaseHref = `${server}/reference`;
+  const cardsBaseHref = `${server}/cards`;
 
   function postOptions(data) {
     return {
@@ -34,10 +16,10 @@
     pattern: /^$/,
     name: 'list',
     enter: function (next, error) {
-      $.getJSON(baseHref, data => {
+      $.getJSON(cardsBaseHref, data => {
         next(data);
       })
-      .fail(() => mock ? next(cards) : error('Could not load list of cards'));
+      .fail(e => console.error(e) || error('Could not load list of cards'));
     },
     render: function ({ data }) {
       let cardList = $('#card-list');
@@ -57,12 +39,16 @@
     pattern: /^#(\d+)$/,
     params: ['id'],
     name: 'detail',
+    exit: function () {
+      document.querySelector('#delete-card-form')
+        .removeEventListener('submit', this.handleDelete);
+    },
     enter: function (next, error) {
       let id = this.id;
-      $.getJSON(`${baseHref}/${id}`, data => {
+      $.getJSON(`${cardsBaseHref}/${id}`, data => {
         next(data);
       })
-      .fail(() => mock ? next(cards[id]) : error ('Could not load card deatils'));
+      .fail(() => error ('Could not load card deatils'));
     },
     render: function ({ data }) {
       $('button[data-href-template]').each(function () {
@@ -76,6 +62,15 @@
       }
       template('address', data.addresses);
       template('phone', data.phoneNumbers);
+      document.querySelector('#delete-card-form')
+        .addEventListener('submit', this.handleDelete);
+      $('#delete-card-form').prop('action', server + '/' + $('#delete-card-form').data('actionTemplate').replace(/\{id\}/, data.id));
+    },
+    handleDelete: function (e) {
+      e.preventDefault();
+      $.ajax(this.action, { method: 'DELETE' })
+        .done(data => location.hash = '')
+        .fail(e => console.error(e) || error('Could not delete card'));
     }
   };
 
@@ -100,10 +95,9 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(baseHref, postOptions(payload), data => {
-        location.href = `#${data.id}`;
-      })
-      .fail(() => mock ? ((payload.id = cards.length) && cards.push(payload) && (location.href = `#${payload.id}`)) : error('Could not save new card'));
+      $.ajax(cardsBaseHref, postOptions(payload))
+        .done(data => location.hash = `#${data.id}`)
+        .fail(e => console.error(e) || error('Could not save new card'));
     }
   };
 
@@ -116,10 +110,10 @@
     },
     enter: function (next, error) {
       let id = this.id;
-      $.getJSON(`${baseHref}/${id}`, data => {
+      $.getJSON(`${cardsBaseHref}/${id}`, data => {
         next(data);
       })
-      .fail(() => mock ? next(cards[id]) : error ('Could not load card deatils'));
+      .fail(() => error ('Could not load card deatils'));
     },
     render: function ({ data }) {
       data.addresses = data.addresses || [];
@@ -148,10 +142,10 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(baseHref, postOptions(payload), data => {
-        location.href = `#${id}`;
+      $.ajax(cardsBaseHref, postOptions(payload), data => {
+        location.hash = `#${id}`;
       })
-      .fail(() => mock ? ((payload.id = cards[id].addresses.length) && cards[id].addresses.push(payload) &&( location.href = `#${id}`)) : error('Could not save new address'));
+      .fail(e => console.error(e) || error('Could not save new address'));
     }
   };
 
@@ -215,7 +209,27 @@
   });
 
   $('.state').addClass('is-hidden');
-  transition(location.hash);
+  error('Loading reference data...');
+
+  let loading = [];
+  for (let route of ['address-types', 'number-types', 'person-titles', 'states']) {
+    loading.push(new Promise((good, bad) => {
+      $.getJSON(`${refBaseHref}/${route}`, good)
+        .fail(bad);
+    }));
+  }
+  Promise.all(loading)
+    .then(([addressTypes, numberTypes, personTitles, states]) => {
+      let titleSelect = $('#person-titles');
+      for (let title of personTitles) {
+        let option = $('<option></option>');
+        option.prop('value', title.value);
+        option.html(title.text);
+        titleSelect.append(option);
+      }
+      transition(location.hash);
+    })
+    .catch(e => console.error(e) || error('Could not load reference data'));
 
   $(function () {
     $('main').removeClass('is-hidden');

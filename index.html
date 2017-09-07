@@ -12,9 +12,6 @@
 
 <body>
   <main class="is-hidden">
-    <label>
-      Use mock data? <input type="checkbox" id="mock" checked>
-    </label>
     <div id="error-state" class="state">
       <h1 id="error-message"></h1>
     </div>
@@ -26,25 +23,31 @@
     </div>
     <div id="state-detail" class="state">
       <a href="#">&lt; Back</a>
+      <section>
+        <form data-action-template="/cards/{id}" method="delete" id="delete-card-form" class="button-holder">
+          <button class="pure-button button-error">Delete</button>
+        </form>
+      </section>
       <h1>
-        <span id="detail-title"></span>
+        <span id="detail-personTitle"></span>
         <span id="detail-firstName"></span>
         <span id="detail-lastName"></span>
       </h1>
+      <h2 id="detail-company"></h2>
       <section>
         <div class="button-holder">
           <button data-href-template="#{id}/new-address" class="pure-button pure-button-primary">Add</button>
-        </div>
-        <h2>Addresses</h2>
-        <ul id="address-list"></ul>
-      </section>
-      <section>
-        <div class="button-holder">
-          <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
-        </div>
-        <h2>Phone Numbers</h2>
-        <ul id="phone-list"></ul>
-      </section>
+    </div>
+    <h2>Addresses</h2>
+    <ul id="address-list"></ul>
+    </section>
+    <section>
+      <div class="button-holder">
+        <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
+      </div>
+      <h2>Phone Numbers</h2>
+      <ul id="phone-list"></ul>
+    </section>
     </div>
     <div id="state-new" class="state">
       <form method="post" id="new-card-form" class="pure-form pure-form-stacked">
@@ -52,19 +55,13 @@
           <legend>New contact card</legend>
         </fieldset>
         <label for="title">Title</label>
-        <select name="title">
-          <option>Ms.</option>
-          <option>Mrs.</option>
-          <option>Mr.</option>
-          <option>Dr.</option>
-          <option>The Honorable</option>
-          <option>Coach</option>
-          <option>Senator</option>
-        </select>
+        <select id="person-titles" name="personTitle"></select>
         <label for="firstName">First name</label>
         <input type="text" name="firstName" class="pure-input-1">
         <label for="lastName">Last name</label>
         <input type="text" name="lastName" class="pure-input-1">
+        <label for="company">Company</label>
+        <input type="text" name="company" class="pure-input-1">
         <button type="submit" class="pure-button pure-button-primary">Create</button>
         <button type="button" data-href="#" class="pure-button">Cancel</button>
       </form>
