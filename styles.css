@@ -1,3 +1,18 @@
+html, body {
+  background-color: black;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: url(http://img00.deviantart.net/8e4f/i/2010/304/4/3/saw_v_2_by_hassoomi-d31v9zz.jpg);
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -8,10 +23,25 @@ section {
   position: relative;
 }
 
+option, select, input, button, textarea {
+  color: black;
+}
+
+a, a:visited {
+  color: orange;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.pure-form legend {
+  color: white;
+}
+
 .state {
   width: 640px;
-  margin: auto;
-  margin-top: 16px;
+  padding-top: 16px;
+  padding-left: 16px;
+  box-sizing: border-box;
   position: relative;
 }
 
@@ -30,3 +60,10 @@ section {
   display: none;
 }
 
+.is-unfinished {
+  color: #CCC;
+}
+
+.is-finished {
+  color: #00AA00;
+}

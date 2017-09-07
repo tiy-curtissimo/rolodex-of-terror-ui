@@ -133,7 +133,6 @@
       }
     },
     handleSubmit: function (e) {
-      console.log('making new address');
       e.preventDefault();
       let id = $(this).data('cardId');
       let payload = {};
@@ -142,14 +141,57 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(cardsBaseHref, postOptions(payload), data => {
-        location.hash = `#${id}`;
-      })
-      .fail(e => console.error(e) || error('Could not save new address'));
+      $.ajax(`${cardsBaseHref}/${id}/addresses`, postOptions(payload))
+        .done(data => location.hash = `#${id}`)
+        .fail(e => console.error(e) || error('Could not save new address'));
     }
   };
 
-  const states = [newAddressState, newState, detailState, listState];
+  const newPhoneState = {
+    pattern: /^#(\d+)\/new-phone-number$/,
+    params: ['id'],
+    name: 'new-phone',
+    exit: function () {
+      $('#new-phone-form').off('submit', this.handleSubmit);
+    },
+    enter: function (next, error) {
+      let id = this.id;
+      $.getJSON(`${cardsBaseHref}/${id}`, data => next(data))
+        .fail(() => error ('Could not load card deatils'));
+    },
+    render: function ({ data }) {
+      data.addresses = data.addresses || [];
+      data.phoneNumbers = data.phoneNumbers || [];
+      for (let key in data) {
+        $(`#new-phone-${key}`).html(data[key]);
+      }
+      $('button[data-href-template]').each(function () {
+        let element = $(this);
+        element.data('href', element.data('hrefTemplate').replace(/\{id\}/, data.id));
+      });
+      $('#new-phone-form')
+        .on('submit', this.handleSubmit)
+        .data('cardId', data.id);
+      for (let element of $('#new-phone-form')[0].elements) {
+        $(element).val(null);
+      }
+    },
+    handleSubmit: function (e) {
+      e.preventDefault();
+      let id = $(this).data('cardId');
+      let payload = {};
+      for (let element of this.elements) {
+        if (element.name) {
+          payload[element.name] = $(element).val();
+        }
+      }
+      $.ajax(`${cardsBaseHref}/${id}/phones`, postOptions(payload))
+        .done(data => location.hash = `#${id}`)
+        .fail(e => console.error(e) || error('Could not save new phone number'));
+    }
+  };
+
+  const states = [newPhoneState, newAddressState, newState, detailState, listState];
 
   function template(id, data) {
     let list = $(`#${id}-list`);
@@ -211,23 +253,43 @@
   $('.state').addClass('is-hidden');
   error('Loading reference data...');
 
+  function fillSelect(target, values) {
+    values.sort((a, b) => a.text < b.text ? -1 : a.text === b.text ? 0 : 1);
+    for (let value of values) {
+      let option = $('<option></option>');
+      option.prop('value', value.value);
+      option.html(value.text);
+      target.append(option);
+    }
+  }
   let loading = [];
+  let loadingState = $('#loading-state')
+    .removeClass('is-hidden');
   for (let route of ['address-types', 'number-types', 'person-titles', 'states']) {
+    let report = $('<h2></h2>')
+      .addClass('is-unfinished')
+      .html(route.replace(/-/g, ' '));
+    loadingState.append(report);
     loading.push(new Promise((good, bad) => {
-      $.getJSON(`${refBaseHref}/${route}`, good)
+      $.getJSON(`${refBaseHref}/${route}`, data => {
+        report
+          .removeClass('is-unfinished')
+          .addClass('is-finished');
+        setTimeout(() => good(data), 500);
+      })
         .fail(bad);
     }));
   }
   Promise.all(loading)
     .then(([addressTypes, numberTypes, personTitles, states]) => {
-      let titleSelect = $('#person-titles');
-      for (let title of personTitles) {
-        let option = $('<option></option>');
-        option.prop('value', title.value);
-        option.html(title.text);
-        titleSelect.append(option);
-      }
-      transition(location.hash);
+      setTimeout(() => {
+        loadingState.addClass('is-hidden');
+        transition(location.hash);
+      }, 500);
+      fillSelect($('#person-titles'), personTitles);
+      fillSelect($('#address-types'), addressTypes);
+      fillSelect($('#states'), states);
+      fillSelect($('#number-types'), numberTypes);
     })
     .catch(e => console.error(e) || error('Could not load reference data'));
 

@@ -15,6 +15,7 @@
     <div id="error-state" class="state">
       <h1 id="error-message"></h1>
     </div>
+    <div id="loading-state" class="state"></div>
     <div id="state-list" class="state">
       <div class="button-holder">
         <button data-href="#new" class="pure-button pure-button-primary">Add</button>
@@ -22,7 +23,7 @@
       <ul id="card-list"></ul>
     </div>
     <div id="state-detail" class="state">
-      <a href="#">&lt; Back</a>
+      <a href="#">Back</a>
       <section>
         <form data-action-template="/cards/{id}" method="delete" id="delete-card-form" class="button-holder">
           <button class="pure-button button-error">Delete</button>
@@ -37,17 +38,17 @@
       <section>
         <div class="button-holder">
           <button data-href-template="#{id}/new-address" class="pure-button pure-button-primary">Add</button>
-    </div>
-    <h2>Addresses</h2>
-    <ul id="address-list"></ul>
-    </section>
-    <section>
-      <div class="button-holder">
-        <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
-      </div>
-      <h2>Phone Numbers</h2>
-      <ul id="phone-list"></ul>
-    </section>
+        </div>
+        <h2>Addresses</h2>
+        <ul id="address-list"></ul>
+      </section>
+      <section>
+        <div class="button-holder">
+          <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
+        </div>
+        <h2>Phone Numbers</h2>
+        <ul id="phone-list"></ul>
+      </section>
     </div>
     <div id="state-new" class="state">
       <form method="post" id="new-card-form" class="pure-form pure-form-stacked">
@@ -77,20 +78,33 @@
           <legend>New address</legend>
         </fieldset>
         <label for="type">Type</label>
-        <select name="type">
-          <option>Home</option>
-          <option>Work</option>
-          <option>Beach</option>
-          <option>Other</option>
-        </select>
+        <select id="address-types" name="addressType"></select>
         <label for="street">Street</label>
         <input type="text" name="street" class="pure-input-1">
         <label for="city">City</label>
         <input type="text" name="city" class="pure-input-1">
         <label for="state">State</label>
-        <input type="text" name="state" class="pure-input-1">
+        <select id="states" name="state"></select>
         <label for="zip">ZIP</label>
         <input type="text" name="zip" class="pure-input-1">
+        <button type="submit" class="pure-button pure-button-primary">Create</button>
+        <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
+      </form>
+    </div>
+    <div id="state-new-phone" class="state">
+      <h1>
+        <span id="new-phone-title"></span>
+        <span id="new-phone-firstName"></span>
+        <span id="new-phone-lastName"></span>
+      </h1>
+      <form method="post" id="new-phone-form" class="pure-form pure-form-stacked">
+        <fieldset>
+          <legend>New phone number</legend>
+        </fieldset>
+        <label for="number-types">Type</label>
+        <select id="number-types" name="numberType"></select>
+        <label for="phone-number">Street</label>
+        <input type="text" id="phone-number" name="phoneNumber" class="pure-input-1">
         <button type="submit" class="pure-button pure-button-primary">Create</button>
         <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
       </form>
@@ -99,7 +113,7 @@
 
   <template id="address-template">
     <li>
-      <div><b id="address-type"></b></div>
+      <div><b id="address-addressType"></b></div>
       <div id="address-street"></div>
       <div>
         <span id="address-city"></span>,
@@ -110,7 +124,7 @@
   </template>
 
   <template id="phone-template">
-    <li><b id="phone-type"></b>: <span id="phone-number"></span></li>
+    <li><b id="phone-numberType"></b>: <span id="phone-phoneNumber"></span></li>
   </template>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
