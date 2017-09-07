@@ -1,6 +1,6 @@
 (function () {
 
-  const server = 'http://quiet-spire-82357.herokuapp.com';
+  const server = 'https://quiet-spire-82357.herokuapp.com';
   const refBaseHref = `${server}/reference`;
   const cardsBaseHref = `${server}/cards`;
 
