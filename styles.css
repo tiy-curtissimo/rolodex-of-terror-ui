@@ -13,6 +13,17 @@ body {
   color: white;
 }
 
+main {
+  padding: 16px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 430px;
+  background-color: rgba(255, 142, 142, 0.3);
+  box-shadow: 2px 0 2px black;
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -33,27 +44,76 @@ a, a:visited {
   text-transform: uppercase;
 }
 
+#card-list {
+  margin-top: 32px;
+  padding-left: 8px;
+}
+
+#card-list li {
+  margin: 16px 0;
+}
+
 .pure-form legend {
   color: white;
 }
 
+.pure-form-stacked input[type="text"],
+.pure-form-stacked select {
+  margin-bottom: 32px;
+}
+
 .state {
-  width: 640px;
-  padding-top: 16px;
-  padding-left: 16px;
   box-sizing: border-box;
   position: relative;
 }
 
 .button-holder {
-  position: absolute;
-  top: 0;
-  right: 0;
+  position: relative;
 }
 
 .button-error {
   background: rgb(202, 60, 60);
   color: white;
+}
+
+.fab {
+  background-color: #0078E7;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  color: white;
+  position: absolute;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+  transition: box-shadow .2s;
+}
+
+.fab:hover {
+  box-shadow: 0 6px 8px black;
+}
+
+.fab-right {
+  right: 0;
+}
+
+.fab-top {
+  top: 16px;
+}
+
+.search-box {
+  color: black;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: white;
+}
+
+.search-box input {
+  flex: 1 0 0px;
+  border: 0;
 }
 
 .is-hidden {

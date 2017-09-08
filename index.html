@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Rolodex of Terror</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,8 +18,14 @@
     </div>
     <div id="loading-state" class="state"></div>
     <div id="state-list" class="state">
+      <form id="last-name-search-form">
+        <div class="search-box">
+          <input type="search" id="last-name-search">
+          <i class="material-icons">search</i>
+        </div>
+      </form>
       <div class="button-holder">
-        <button data-href="#new" class="pure-button pure-button-primary">Add</button>
+        <button data-href="#new" class="fab fab-right fab-top"><i class="material-icons">add</i></button>
       </div>
       <ul id="card-list"></ul>
     </div>
@@ -56,11 +63,11 @@
           <legend>New contact card</legend>
         </fieldset>
         <label for="title">Title</label>
-        <select id="person-titles" name="personTitle"></select>
+        <select required id="person-titles" name="personTitle"></select>
         <label for="firstName">First name</label>
-        <input type="text" name="firstName" class="pure-input-1">
+        <input required type="text" name="firstName" class="pure-input-1">
         <label for="lastName">Last name</label>
-        <input type="text" name="lastName" class="pure-input-1">
+        <input required type="text" name="lastName" class="pure-input-1">
         <label for="company">Company</label>
         <input type="text" name="company" class="pure-input-1">
         <button type="submit" class="pure-button pure-button-primary">Create</button>

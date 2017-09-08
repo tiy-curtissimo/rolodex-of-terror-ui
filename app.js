@@ -15,13 +15,27 @@
   const listState = {
     pattern: /^$/,
     name: 'list',
+    exit: function () {
+      document
+        .querySelector('#last-name-search-form')
+        .removeEventListener('submit', this.performSearch);
+      this.performSearch = null;
+    },
     enter: function (next, error) {
+      document.querySelector('#last-name-search').value = '';
       $.getJSON(cardsBaseHref, data => {
-        next(data);
-      })
-      .fail(e => console.error(e) || error('Could not load list of cards'));
+          next(data);
+        })
+        .fail(e => console.error(e) || error('Could not load list of cards'));
     },
     render: function ({ data }) {
+      if (!this.performSearch) {
+        this.performSearch = this.handleSearch.bind(this);
+        document
+        .querySelector('#last-name-search-form')
+        .addEventListener('submit', this.performSearch);
+      }
+      data.sort((a, b) => a.lastName.charCodeAt(0) - b.lastName.charCodeAt(0));
       let cardList = $('#card-list');
       cardList.html('');
       for (let entry of data) {
@@ -32,6 +46,24 @@
         item.append(anchor);
         cardList.append(item);
       }
+    },
+    handleSearch: function (e) {
+      e.preventDefault();
+      const filter = document.querySelector('#last-name-search').value;
+      $.getJSON(`${cardsBaseHref}?lastName=${filter}`, data => {
+        data.sort((a, b) => a.lastName.charCodeAt(0) - b.lastName.charCodeAt(0));
+        let cardList = $('#card-list');
+        cardList.html('');
+        for (let entry of data) {
+          let item = $('<li></li>');
+          let anchor = $('<a></a>');
+          anchor.attr('href', `#${entry.id}`);
+          anchor.html(`${entry.lastName}, ${entry.firstName}`);
+          item.append(anchor);
+          cardList.append(item);
+        }
+      })
+        .fail(e => console.error(e) || error('Could not load list of cards'));
     }
   };
 
@@ -48,7 +80,7 @@
       $.getJSON(`${cardsBaseHref}/${id}`, data => {
         next(data);
       })
-      .fail(() => error ('Could not load card deatils'));
+        .fail(() => error('Could not load card deatils'));
     },
     render: function ({ data }) {
       $('button[data-href-template]').each(function () {
@@ -113,7 +145,7 @@
       $.getJSON(`${cardsBaseHref}/${id}`, data => {
         next(data);
       })
-      .fail(() => error ('Could not load card deatils'));
+        .fail(() => error('Could not load card deatils'));
     },
     render: function ({ data }) {
       data.addresses = data.addresses || [];
@@ -157,7 +189,7 @@
     enter: function (next, error) {
       let id = this.id;
       $.getJSON(`${cardsBaseHref}/${id}`, data => next(data))
-        .fail(() => error ('Could not load card deatils'));
+        .fail(() => error('Could not load card deatils'));
     },
     render: function ({ data }) {
       data.addresses = data.addresses || [];
@@ -254,6 +286,7 @@
   error('Loading reference data...');
 
   function fillSelect(target, values) {
+    values = values.filter(x => x);
     values.sort((a, b) => a.text < b.text ? -1 : a.text === b.text ? 0 : 1);
     for (let value of values) {
       let option = $('<option></option>');
