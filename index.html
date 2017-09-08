@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Rolodex of Terror</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -30,96 +30,152 @@
       <ul id="card-list"></ul>
     </div>
     <div id="state-detail" class="state">
-      <a href="#">Back</a>
-      <section>
-        <form data-action-template="/cards/{id}" method="delete" id="delete-card-form" class="button-holder">
-          <button class="pure-button button-error">Delete</button>
-        </form>
-      </section>
-      <h1>
-        <span id="detail-title"></span>
-        <span id="detail-firstName"></span>
-        <span id="detail-lastName"></span>
-      </h1>
-      <h2 id="detail-company"></h2>
-      <section>
-        <div class="button-holder">
-          <button data-href-template="#{id}/new-address" class="pure-button pure-button-primary">Add</button>
+      <div class="card">
+        <h1 class="card-title card-content">
+          <span id="detail-title"></span>
+          <span id="detail-firstName"></span>
+          <span id="detail-lastName"></span>
+        </h1>
+        <h2 class="card-content" id="detail-company"></h2>
+        <div class="card-content card-sub-header">Addresses</div>
+        <ul id="address-list" class="card-list"></ul>
+        <div class="card-content card-sub-header">Phone numbers</div>
+        <ul id="phone-list" class="card-list"></ul>
+        <div class="card-actions">
+          <button type="button" data-href="#" class="card-close flat-button"><i class="material-icons">close</i></button>
+          <button class="flat-button flat-button-primary" data-href-template="#{id}/new-address">+ address</button>
+          <button class="flat-button flat-button-primary" data-href-template="#{id}/new-phone-number">+ phone</button>
+          <form data-action-template="/cards/{id}" method="delete" id="delete-card-form">
+            <button type="submit" class="flat-button flat-button-destroy">Delete</button>
+          </form>
         </div>
-        <h2>Addresses</h2>
-        <ul id="address-list"></ul>
-      </section>
-      <section>
-        <div class="button-holder">
-          <button data-href-template="#{id}/new-phone-number" class="pure-button pure-button-primary">Add</button>
-        </div>
-        <h2>Phone Numbers</h2>
-        <ul id="phone-list"></ul>
-      </section>
+      </div>
     </div>
     <div id="state-new" class="state">
-      <form method="post" id="new-card-form" class="pure-form pure-form-stacked">
-        <fieldset>
-          <legend>New contact card</legend>
-        </fieldset>
-        <label for="title">Title</label>
-        <select required id="person-titles" name="personTitle"></select>
-        <label for="firstName">First name</label>
-        <input required type="text" name="firstName" class="pure-input-1">
-        <label for="lastName">Last name</label>
-        <input required type="text" name="lastName" class="pure-input-1">
-        <label for="company">Company</label>
-        <input type="text" name="company" class="pure-input-1">
-        <button type="submit" class="pure-button pure-button-primary">Create</button>
-        <button type="button" data-href="#" class="pure-button">Cancel</button>
-      </form>
+      <div class="card">
+        <form method="post" id="new-card-form">
+          <fieldset>
+            <legend>New contact card</legend>
+            <label for="title">Title</label>
+            <select required id="person-titles" name="personTitle"></select>
+            <label for="firstName">First name</label>
+            <input required type="text" name="firstName">
+            <label for="lastName">Last name</label>
+            <input required type="text" name="lastName">
+            <label for="company">Company</label>
+            <input type="text" name="company">
+          </fieldset>
+          <div class="card-actions">
+            <button type="button" data-href="#" class="card-close flat-button"><i class="material-icons">close</i></button>
+            <button type="submit" class="flat-button flat-button-primary">Create</button>
+          </div>
+        </form>
+      </div>
     </div>
     <div id="state-new-address" class="state">
-      <h1>
-        <span id="new-address-title"></span>
-        <span id="new-address-firstName"></span>
-        <span id="new-address-lastName"></span>
-      </h1>
-      <form method="post" id="new-address-form" class="pure-form pure-form-stacked">
-        <fieldset>
-          <legend>New address</legend>
-        </fieldset>
-        <label for="type">Type</label>
-        <select required id="address-types" name="addressType"></select>
-        <label for="street">Street</label>
-        <input required type="text" name="street" class="pure-input-1">
-        <label for="city">City</label>
-        <input required type="text" name="city" class="pure-input-1">
-        <label for="state">State</label>
-        <select required id="states" name="state"></select>
-        <label for="zip">ZIP</label>
-        <input required type="text" name="zip" class="pure-input-1">
-        <button type="submit" class="pure-button pure-button-primary">Create</button>
-        <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
-      </form>
+      <div class="card">
+        <h1 class="card-title card-content">New Address</h1>
+        <form method="post" id="new-address-form">
+          <fieldset>
+            <legend>
+              <span id="new-address-title"></span>
+              <span id="new-address-firstName"></span>
+              <span id="new-address-lastName"></span>
+            </legend>
+            <label for="type">Type</label>
+            <select required id="address-types" name="addressType"></select>
+            <label for="street">Street</label>
+            <input required type="text" name="street">
+            <label for="city">City</label>
+            <input required type="text" name="city">
+            <label for="state">State</label>
+            <select required id="states" name="state"></select>
+            <label for="zip">ZIP</label>
+            <input required type="text" name="zip">
+          </fieldset>
+          <div class="card-actions">
+            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+            <button type="submit" class="flat-button flat-button-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="state-edit-address" class="state">
+      <div class="card">
+        <h1 class="card-title card-content">Edit Address</h1>
+        <form method="post" id="edit-address-form">
+          <fieldset>
+            <legend>
+              <span id="edit-address-title"></span>
+              <span id="edit-address-firstName"></span>
+              <span id="edit-address-lastName"></span>
+            </legend>
+            <label for="type">Type</label>
+            <select required id="edit-address-types" name="addressType"></select>
+            <label for="street">Street</label>
+            <input required type="text" name="street">
+            <label for="city">City</label>
+            <input required type="text" name="city">
+            <label for="state">State</label>
+            <select required id="edit-states" name="state"></select>
+            <label for="zip">ZIP</label>
+            <input required type="text" name="zip">
+          </fieldset>
+          <div class="card-actions">
+            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+            <button type="submit" class="flat-button flat-button-primary">Update</button>
+          </div>
+        </form>
+      </div>
     </div>
     <div id="state-new-phone" class="state">
-      <h1>
-        <span id="new-phone-title"></span>
-        <span id="new-phone-firstName"></span>
-        <span id="new-phone-lastName"></span>
-      </h1>
-      <form method="post" id="new-phone-form" class="pure-form pure-form-stacked">
-        <fieldset>
-          <legend>New phone number</legend>
-        </fieldset>
-        <label for="number-types">Type</label>
-        <select required id="number-types" name="numberType"></select>
-        <label for="phone-number">Phone number</label>
-        <input required type="text" id="phone-number" name="phoneNumber" class="pure-input-1">
-        <button type="submit" class="pure-button pure-button-primary">Create</button>
-        <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
-      </form>
+      <div class="card">
+        <h1 class="card-title card-content">New phone number</h1>
+        <form method="post" id="new-phone-form">
+          <fieldset>
+            <legend>
+              <span id="new-phone-title"></span>
+              <span id="new-phone-firstName"></span>
+              <span id="new-phone-lastName"></span>
+            </legend>
+            <label for="number-types">Type</label>
+            <select required id="number-types" name="numberType"></select>
+            <label for="phone-number">Phone number</label>
+            <input required type="text" id="phone-number" name="phoneNumber">
+          </fieldset>
+          <div class="card-actions">
+            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+            <button type="submit" class="flat-button flat-button-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="state-edit-phone" class="state">
+      <div class="card">
+        <h1 class="card-title card-content">Edit phone number</h1>
+        <form method="post" id="edit-phone-form">
+          <fieldset>
+            <legend>
+              <span id="edit-phone-title"></span>
+              <span id="edit-phone-firstName"></span>
+              <span id="edit-phone-lastName"></span>
+            </legend>
+            <label for="number-types">Type</label>
+            <select required id="edit-number-types" name="numberType"></select>
+            <label for="phone-number">Phone number</label>
+            <input required type="text" name="phoneNumber">
+          </fieldset>
+          <div class="card-actions">
+            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+            <button type="submit" class="flat-button flat-button-primary">Update</button>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 
   <template id="address-template">
-    <li>
+    <li class="card-list-item" data-href="#{id}/addresses/{addressId}">
       <div><b id="address-addressType"></b></div>
       <div id="address-street"></div>
       <div>
@@ -131,7 +187,10 @@
   </template>
 
   <template id="phone-template">
-    <li><b id="phone-numberType"></b>: <span id="phone-phoneNumber"></span></li>
+    <li class="card-list-item" data-href="#{id}/phones/{phoneId}">
+      <div><b id="phone-numberType"></b></div>
+      <div id="phone-phoneNumber"></div>
+    </li>
   </template>
 
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>

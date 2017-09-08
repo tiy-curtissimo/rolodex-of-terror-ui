@@ -5,11 +5,11 @@
   const cardsBaseHref = `${server}/cards`;
   const ref = {};
 
-  function postOptions(data) {
+  function options(data, type) {
     return {
       data: JSON.stringify(data),
       contentType: 'application/json',
-      type: 'POST'
+      type
     };
   }
 
@@ -25,16 +25,16 @@
     enter: function (next, error) {
       document.querySelector('#last-name-search').value = '';
       $.getJSON(cardsBaseHref, data => {
-          next(data);
-        })
+        next(data);
+      })
         .fail(e => console.error(e) || error('Could not load list of cards'));
     },
     render: function ({ data }) {
       if (!this.performSearch) {
         this.performSearch = this.handleSearch.bind(this);
         document
-        .querySelector('#last-name-search-form')
-        .addEventListener('submit', this.performSearch);
+          .querySelector('#last-name-search-form')
+          .addEventListener('submit', this.performSearch);
       }
       data.sort((a, b) => a.lastName.charCodeAt(0) - b.lastName.charCodeAt(0));
       let cardList = $('#card-list');
@@ -94,8 +94,8 @@
       for (let key in data) {
         $(`#detail-${key}`).html(data[key]);
       }
-      template('address', data.addresses);
-      template('phone', data.phoneNumbers);
+      template('address', data.id, data.addresses);
+      template('phone', data.id, data.phoneNumbers);
       document.querySelector('#delete-card-form')
         .addEventListener('submit', this.handleDelete);
       $('#delete-card-form').prop('action', server + '/' + $('#delete-card-form').data('actionTemplate').replace(/\{id\}/, data.id));
@@ -129,7 +129,7 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(cardsBaseHref, postOptions(payload))
+      $.ajax(cardsBaseHref, options(payload, 'POST'))
         .done(data => location.hash = `#${data.id}`)
         .fail(e => console.error(e) || error('Could not save new card'));
     }
@@ -176,7 +176,7 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(`${cardsBaseHref}/${id}/addresses`, postOptions(payload))
+      $.ajax(`${cardsBaseHref}/${id}/addresses`, options(payload, 'POST'))
         .done(data => location.hash = `#${id}`)
         .fail(e => console.error(e) || error('Could not save new address'));
     }
@@ -221,20 +221,124 @@
           payload[element.name] = $(element).val();
         }
       }
-      $.ajax(`${cardsBaseHref}/${id}/phones`, postOptions(payload))
+      $.ajax(`${cardsBaseHref}/${id}/phones`, options(payload, 'POST'))
         .done(data => location.hash = `#${id}`)
         .fail(e => console.error(e) || error('Could not save new phone number'));
     }
   };
 
-  const states = [newPhoneState, newAddressState, newState, detailState, listState];
+  const editAddressState = {
+    pattern: /^#(\d+)\/addresses\/(\d+)$/,
+    params: ['id', 'addressId'],
+    name: 'edit-address',
+    exit: function () {
+      $('#edit-address-form').off('submit', this.handleSubmit);
+    },
+    enter: function (next, error) {
+      let id = Number.parseInt(this.id);
+      let addressId = Number.parseInt(this.addressId);
+      $.getJSON(`${cardsBaseHref}/${id}`, data => {
+        next({ contact: data, id, addressId });
+      })
+        .fail(() => error('Could not load card deatils'));
+    },
+    render: function ({ data: { contact, id, addressId } }) {
+      contact.addresses = contact.addresses || [];
+      contact.phoneNumbers = contact.phoneNumbers || [];
+      contact.title = ref.personTitles[contact.personTitle];
+      const address = contact.addresses.find(x => x.id === addressId);
+      for (let key in contact) {
+        $(`#edit-address-${key}`).html(contact[key]);
+      }
+      $('button[data-href-template]').each(function () {
+        let element = $(this);
+        element.data('href', element.data('hrefTemplate').replace(/\{id\}/, id));
+      });
+      $('#edit-address-form')
+        .on('submit', this.handleSubmit)
+        .data('cardId', contact.id)
+        .data('addressId', address.id);
+      for (let element of $('#edit-address-form')[0].elements) {
+        $(element).val(address[element.name]);
+      }
+    },
+    handleSubmit: function (e) {
+      e.preventDefault();
+      let id = $(this).data('cardId');
+      let addressId = $(this).data('addressId');
+      let payload = {};
+      for (let element of this.elements) {
+        if (element.name) {
+          payload[element.name] = $(element).val();
+        }
+      }
+      $.ajax(`${cardsBaseHref}/${id}/addresses/${addressId}`, options(payload, 'PUT'))
+        .done(data => location.hash = `#${id}`)
+        .fail(e => console.error(e) || error('Could not update address'));
+    }
+  };
 
-  function template(id, data) {
+  const editPhoneState = {
+    pattern: /^#(\d+)\/phones\/(\d+)$/,
+    params: ['id', 'phoneId'],
+    name: 'edit-phone',
+    exit: function () {
+      $('#edit-phone-form').off('submit', this.handleSubmit);
+    },
+    enter: function (next, error) {
+      let id = Number.parseInt(this.id);
+      let phoneId = Number.parseInt(this.phoneId);
+      $.getJSON(`${cardsBaseHref}/${id}`, data => next({ contact: data, id, phoneId }))
+        .fail(() => error('Could not load card deatils'));
+    },
+    render: function ({ data: { contact, id, phoneId } }) {
+      contact.addresses = contact.addresses || [];
+      contact.phoneNumbers = contact.phoneNumbers || [];
+      contact.title = ref.personTitles[contact.personTitle];
+      const phone = contact.phoneNumbers.find(x => x.id === phoneId);
+      for (let key in contact) {
+        $(`#edit-phone-${key}`).html(contact[key]);
+      }
+      $('button[data-href-template]').each(function () {
+        let element = $(this);
+        element.data('href', element.data('hrefTemplate').replace(/\{id\}/, id));
+      });
+      $('#edit-phone-form')
+        .on('submit', this.handleSubmit)
+        .data('cardId', contact.id)
+        .data('phoneId', phone.id);
+      for (let element of $('#edit-phone-form')[0].elements) {
+        $(element).val(phone[element.name]);
+      }
+    },
+    handleSubmit: function (e) {
+      e.preventDefault();
+      let id = $(this).data('cardId');
+      let phoneId = $(this).data('phoneId');
+      let payload = {};
+      for (let element of this.elements) {
+        if (element.name) {
+          payload[element.name] = $(element).val();
+        }
+      }
+      $.ajax(`${cardsBaseHref}/${id}/phones/${phoneId}`, options(payload, 'PUT'))
+        .done(data => location.hash = `#${id}`)
+        .fail(e => console.error(e) || error('Could not update phone number'));
+    }
+  };
+
+  const states = [editPhoneState, editAddressState, newPhoneState, newAddressState, newState, detailState, listState];
+
+  function template(id, contextId, data) {
     let list = $(`#${id}-list`);
     list.html('');
     let template = document.querySelector(`#${id}-template`).content;
     for (let datum of data) {
       let clone = document.importNode(template, true);
+      let li = clone.querySelector('li');
+      let t = li.getAttribute('data-href');
+      let href = t.replace(/\{id\}/, contextId).replace(`{${id}Id}`, datum.id);
+      li.setAttribute('data-href', href);
       for (let key in datum) {
         $(`#${id}-${key}`, clone)
           .html(datum[key])
@@ -331,18 +435,30 @@
       }, 500);
       fillSelect($('#person-titles'), personTitles);
       fillSelect($('#address-types'), addressTypes);
+      fillSelect($('#edit-address-types'), addressTypes);
       fillSelect($('#states'), states);
+      fillSelect($('#edit-states'), states);
       fillSelect($('#number-types'), numberTypes);
+      fillSelect($('#edit-number-types'), numberTypes);
       ref.addressTypes = addressTypes.reduce(toRef, {});
       ref.numberTypes = numberTypes.reduce(toRef, {});
       ref.personTitles = personTitles.reduce(toRef, {});
       ref.states = states.reduce(toRef, {});
-      console.log(ref);
     })
     .catch(e => console.error(e) || error('Could not load reference data'));
 
   $(function () {
     $('main').removeClass('is-hidden');
+    $(document).on('submit', 'form.card-list-delete-form', function (e) {
+      e.preventDefault();
+      let url = `${server}${this.getAttribute('data-action')}`;
+      $.ajax(url, { type: this.getAttribute('data-method') })
+        .done(data => detailState.render({ data }))
+        .fail(e => console.error(e) || error('Could not delete that'));
+    });
+    $(document).on('click', 'li[data-href]', function (e) {
+      location.hash = this.getAttribute('data-href');
+    });
   });
 
 }());
