@@ -3,6 +3,8 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -45,6 +47,28 @@ a, a:visited {
   text-transform: uppercase;
 }
 
+fieldset {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+select,
+input[type="text"] {
+  height: 32px;
+  font-size: 16px;
+  border: 0;
+  border-bottom: 2px solid #CCC;
+  margin-bottom: 16px;
+  outline: 0;
+  box-shadow: none !important;
+}
+
+select:focus,
+input[type="text"]:focus {
+  border-bottom-color: orange;
+}
+
 #card-list {
   margin-top: 32px;
   padding-left: 8px;
@@ -54,15 +78,6 @@ a, a:visited {
   margin: 16px 0;
 }
 
-.pure-form legend {
-  color: white;
-}
-
-.pure-form-stacked input[type="text"],
-.pure-form-stacked select {
-  margin-bottom: 32px;
-}
-
 .state {
   box-sizing: border-box;
   position: relative;
@@ -70,11 +85,6 @@ a, a:visited {
 
 .button-holder {
   position: relative;
-}
-
-.button-error {
-  background: rgb(202, 60, 60);
-  color: white;
 }
 
 .fab {
@@ -102,6 +112,95 @@ a, a:visited {
 
 .fab-top {
   top: 16px;
+}
+
+.flat-button {
+  font-size: 1em;
+  border: 0;
+  padding: 8px 0;
+  background-color: transparent;
+  text-transform: uppercase;
+  color: orange;
+  border-radius: 2px;
+}
+
+.flat-button-primary {
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: #0078E7;
+  color: white;
+}
+
+.flat-button-destroy {
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: rgb(202, 60, 60);
+  color: white;
+}
+
+.card {
+  background-color: white;
+  color: black;
+  border-radius: 2px;
+}
+
+.card fieldset {
+  padding: 16px;
+}
+
+.card legend {
+  font-size: 2em;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  border: 0;
+}
+
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-top: 32px;
+}
+
+.card-actions .flat-button {
+  margin-right: 8px;
+}
+
+.card-close {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  padding: 0;
+}
+
+.card-content {
+  padding: 8px 16px;
+  margin: 0;
+}
+
+.card-content:empty {
+  padding: 0;
+}
+
+.card-sub-header {
+  margin-top: 24px;
+  font-size: 16px;
+  color: #757575;
+}
+
+.card-title {
+  padding-top: 16px;
+}
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-list-item {
+  margin-left: 16px;
+  position: relative;
+  cursor: pointer;
 }
 
 .search-box {
