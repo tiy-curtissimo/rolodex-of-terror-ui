@@ -37,7 +37,7 @@
         </form>
       </section>
       <h1>
-        <span id="detail-personTitle"></span>
+        <span id="detail-title"></span>
         <span id="detail-firstName"></span>
         <span id="detail-lastName"></span>
       </h1>
@@ -85,15 +85,15 @@
           <legend>New address</legend>
         </fieldset>
         <label for="type">Type</label>
-        <select id="address-types" name="addressType"></select>
+        <select required id="address-types" name="addressType"></select>
         <label for="street">Street</label>
-        <input type="text" name="street" class="pure-input-1">
+        <input required type="text" name="street" class="pure-input-1">
         <label for="city">City</label>
-        <input type="text" name="city" class="pure-input-1">
+        <input required type="text" name="city" class="pure-input-1">
         <label for="state">State</label>
-        <select id="states" name="state"></select>
+        <select required id="states" name="state"></select>
         <label for="zip">ZIP</label>
-        <input type="text" name="zip" class="pure-input-1">
+        <input required type="text" name="zip" class="pure-input-1">
         <button type="submit" class="pure-button pure-button-primary">Create</button>
         <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
       </form>
@@ -109,9 +109,9 @@
           <legend>New phone number</legend>
         </fieldset>
         <label for="number-types">Type</label>
-        <select id="number-types" name="numberType"></select>
+        <select required id="number-types" name="numberType"></select>
         <label for="phone-number">Street</label>
-        <input type="text" id="phone-number" name="phoneNumber" class="pure-input-1">
+        <input required type="text" id="phone-number" name="phoneNumber" class="pure-input-1">
         <button type="submit" class="pure-button pure-button-primary">Create</button>
         <button type="button" data-href-template="#{id}" class="pure-button">Cancel</button>
       </form>

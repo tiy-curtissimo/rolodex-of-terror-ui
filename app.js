@@ -3,6 +3,7 @@
   const server = 'https://quiet-spire-82357.herokuapp.com';
   const refBaseHref = `${server}/reference`;
   const cardsBaseHref = `${server}/cards`;
+  const ref = {};
 
   function postOptions(data) {
     return {
@@ -89,6 +90,7 @@
       });
       data.addresses = data.addresses || [];
       data.phoneNumbers = data.phoneNumbers || [];
+      data.title = ref.personTitles[data.personTitle];
       for (let key in data) {
         $(`#detail-${key}`).html(data[key]);
       }
@@ -150,6 +152,7 @@
     render: function ({ data }) {
       data.addresses = data.addresses || [];
       data.phoneNumbers = data.phoneNumbers || [];
+      data.title = ref.personTitles[data.personTitle];
       for (let key in data) {
         $(`#new-address-${key}`).html(data[key]);
       }
@@ -194,6 +197,7 @@
     render: function ({ data }) {
       data.addresses = data.addresses || [];
       data.phoneNumbers = data.phoneNumbers || [];
+      data.title = ref.personTitles[data.personTitle];
       for (let key in data) {
         $(`#new-phone-${key}`).html(data[key]);
       }
@@ -295,6 +299,12 @@
       target.append(option);
     }
   }
+  function toRef(acc, tuple) {
+    if (tuple) {
+      acc[tuple.value] = tuple.text;
+    }
+    return acc;
+  }
   let loading = [];
   let loadingState = $('#loading-state')
     .removeClass('is-hidden');
@@ -323,6 +333,11 @@
       fillSelect($('#address-types'), addressTypes);
       fillSelect($('#states'), states);
       fillSelect($('#number-types'), numberTypes);
+      ref.addressTypes = addressTypes.reduce(toRef, {});
+      ref.numberTypes = numberTypes.reduce(toRef, {});
+      ref.personTitles = personTitles.reduce(toRef, {});
+      ref.states = states.reduce(toRef, {});
+      console.log(ref);
     })
     .catch(e => console.error(e) || error('Could not load reference data'));
 
