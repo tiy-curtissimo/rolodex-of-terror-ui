@@ -38,9 +38,9 @@
           <span id="detail-lastName"></span>
         </h1>
         <h2 class="card-content" id="detail-company"></h2>
-        <div class="card-content card-sub-header">Addresses</div>
+        <div id="address-sub-header" class="card-content card-sub-header">Addresses</div>
         <ul id="address-list" class="card-list"></ul>
-        <div class="card-content card-sub-header">Phone numbers</div>
+        <div id="phone-sub-header" class="card-content card-sub-header">Phone numbers</div>
         <ul id="phone-list" class="card-list"></ul>
         <div class="card-actions">
           <button type="button" data-href="#" class="card-close flat-button"><i class="material-icons">close</i></button>
@@ -124,11 +124,14 @@
             <label for="zip">ZIP</label>
             <input required type="text" name="zip">
           </fieldset>
-          <div class="card-actions">
-            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
-            <button type="submit" class="flat-button flat-button-primary">Update</button>
-          </div>
         </form>
+        <div class="card-actions">
+          <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+          <button form="edit-address-form" type="submit" class="flat-button flat-button-primary">Update</button>
+          <form class="card-list-delete-form" data-action-template="/cards/{id}/addresses/{addressId}" data-method="DELETE">
+            <button type="submit" class="flat-button flat-button-destroy">Delete</button>
+          </form>
+        </div>
       </div>
     </div>
     <div id="state-new-phone" class="state">
@@ -168,11 +171,14 @@
             <label for="phone-number">Phone number</label>
             <input required type="text" name="phoneNumber">
           </fieldset>
-          <div class="card-actions">
-            <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
-            <button type="submit" class="flat-button flat-button-primary">Update</button>
-          </div>
         </form>
+        <div class="card-actions">
+          <button type="button" data-href-template="#{id}" class="card-close flat-button"><i class="material-icons">close</i></button>
+          <button form="edit-phone-form" type="submit" class="flat-button flat-button-primary">Update</button>
+          <form class="card-list-delete-form" data-action-template="/cards/{id}/phones/{phoneId}" data-method="DELETE">
+            <button type="submit" class="flat-button flat-button-destroy">Delete</button>
+          </form>
+        </div>
       </div>
     </div>
   </main>

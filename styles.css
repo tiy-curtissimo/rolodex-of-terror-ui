@@ -165,6 +165,7 @@ input[type="text"]:focus {
 }
 
 .card-image {
+  background-color: #CCC;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

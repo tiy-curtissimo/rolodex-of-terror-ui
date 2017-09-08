@@ -268,6 +268,11 @@
       for (let element of $('#edit-address-form')[0].elements) {
         $(element).val(address[element.name]);
       }
+      for (let form of document.querySelectorAll('#state-edit-address form[data-action-template]')) {
+        let t = form.getAttribute('data-action-template');
+        let action = t.replace('{id}', id).replace('{addressId}', addressId);
+        form.setAttribute('data-action', action);
+      }
     },
     handleSubmit: function (e) {
       e.preventDefault();
@@ -317,6 +322,11 @@
       for (let element of $('#edit-phone-form')[0].elements) {
         $(element).val(phone[element.name]);
       }
+      for (let form of document.querySelectorAll('#state-edit-phone form[data-action-template]')) {
+        let t = form.getAttribute('data-action-template');
+        let action = t.replace('{id}', id).replace('{phoneId}', phoneId);
+        form.setAttribute('data-action', action);
+      }
     },
     handleSubmit: function (e) {
       e.preventDefault();
@@ -339,6 +349,12 @@
   function template(id, contextId, data) {
     let list = $(`#${id}-list`);
     list.html('');
+
+    if (!data.length) {
+      return $(`#${id}-sub-header`).addClass('is-hidden');
+    }
+
+    $(`#${id}-sub-header`).removeClass('is-hidden');
     let template = document.querySelector(`#${id}-template`).content;
     for (let datum of data) {
       let clone = document.importNode(template, true);
@@ -460,7 +476,7 @@
       e.preventDefault();
       let url = `${server}${this.getAttribute('data-action')}`;
       $.ajax(url, { type: this.getAttribute('data-method') })
-        .done(data => detailState.render({ data }))
+        .done(data => location.hash = `#${data.id}`)
         .fail(e => console.error(e) || error('Could not delete that'));
     });
     $(document).on('click', 'li[data-href]', function (e) {
