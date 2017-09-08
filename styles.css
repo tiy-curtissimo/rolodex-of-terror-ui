@@ -54,6 +54,7 @@ fieldset {
 }
 
 select,
+input[type="url"],
 input[type="text"] {
   height: 32px;
   font-size: 16px;
@@ -65,6 +66,7 @@ input[type="text"] {
 }
 
 select:focus,
+input[type="url"]:focus,
 input[type="text"]:focus {
   border-bottom-color: orange;
 }
@@ -162,11 +164,22 @@ input[type="text"]:focus {
   margin-top: 32px;
 }
 
+.card-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 200px;
+}
+
 .card-actions .flat-button {
   margin-right: 8px;
 }
 
 .card-close {
+  background-color: white;
+  border: 1px solid #757575;
+  height: 26px;
+  width: 26px;
   position: absolute;
   top: 8px;
   right: 0;

@@ -96,6 +96,13 @@
       }
       template('address', data.id, data.addresses);
       template('phone', data.id, data.phoneNumbers);
+      let imageHolder = document.querySelector('#state-detail .card-image');
+      if (data.pictureUrl) {
+        imageHolder.style.backgroundImage = `url(${data.pictureUrl})`;
+        imageHolder.classList.remove('is-hidden');
+      } else {
+        imageHolder.classList.add('is-hidden');
+      }
       document.querySelector('#delete-card-form')
         .addEventListener('submit', this.handleDelete);
       $('#delete-card-form').prop('action', server + '/' + $('#delete-card-form').data('actionTemplate').replace(/\{id\}/, data.id));
